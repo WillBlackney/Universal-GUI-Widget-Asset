@@ -81,6 +81,75 @@ namespace BlackneyStudios.GuiWidget
                 wEvent.text.DOKill();
                 wEvent.text.DOColor(wEvent.endColour, wEvent.transistionSpeed);
             }
+            else if (wEvent.widgetEventType == WidgetEvent.Enlarge)
+            {
+                // Kill off any active animations on the transform
+                wEvent.transformToScale.DOKill();
+
+                // Calculate enlargement scale and convert it to to a vector 3
+                Vector3 endScale = new Vector3(wEvent.OriginalScale.x * wEvent.percentageSizeIncrease,
+                    wEvent.OriginalScale.y * wEvent.percentageSizeIncrease,
+                    wEvent.OriginalScale.z * wEvent.percentageSizeIncrease);
+
+                // Scale the transform to its new size
+                wEvent.transformToScale.DOScale(endScale, wEvent.enlargeSpeed);
+            }
+            else if (wEvent.widgetEventType == WidgetEvent.Shrink)
+            {
+                // Kill off any active animations on the transform
+                wEvent.transformToScale.DOKill();
+
+                Vector3 endScale = new Vector3(wEvent.OriginalScale.x * wEvent.percentageSizeDecrease,
+                    wEvent.OriginalScale.y * wEvent.percentageSizeDecrease,
+                    wEvent.OriginalScale.z * wEvent.percentageSizeDecrease);
+
+                // Scale the transform to its new size
+                wEvent.transformToScale.DOScale(endScale, wEvent.shrinkSpeed);
+            }
+            else if (wEvent.widgetEventType == WidgetEvent.EnlargeAndShrink)
+            {
+                // Kill off any active animations on the transform
+                wEvent.transformToScale.DOKill();
+
+                // Calculate enlargement scale and convert it to to a vector 3
+                Vector3 enlargeScale = new Vector3(wEvent.OriginalScale.x * wEvent.percentageSizeIncrease,
+                    wEvent.OriginalScale.y * wEvent.percentageSizeIncrease,
+                    wEvent.OriginalScale.z * wEvent.percentageSizeIncrease);
+
+                // Calculate shrink scale and convert it to to a vector 3
+                Vector3 decreaseScale = new Vector3(wEvent.OriginalScale.x * wEvent.percentageSizeDecrease,
+                    wEvent.OriginalScale.y * wEvent.percentageSizeDecrease,
+                    wEvent.OriginalScale.z * wEvent.percentageSizeDecrease);
+
+                // Create an animation sequence chain
+                Sequence s = DOTween.Sequence();
+
+                // Add the enlargment animation to the sequence, then play it
+                s.Append(wEvent.transformToScale.DOScale(enlargeScale, wEvent.enlargeSpeed));
+
+                // Once the enlargment sequence is complete, play the shrink animation
+                s.OnComplete(() => wEvent.transformToScale.DOScale(decreaseScale, wEvent.shrinkSpeed));                
+            }
+            else if (wEvent.widgetEventType == WidgetEvent.Wiggle &&
+                wEvent.wiggleType == WiggleType.RotateOnTheSpot)
+            {
+                // Kill off any active animations on the transform
+                wEvent.transformToScale.DOKill();
+
+                WiggleSideToSide(wEvent);
+            }
+        }
+
+        private void WiggleSideToSide(WidgetEventData wEvent)
+        {
+            Vector3 rightRotateVector = new Vector3(0, 0, wEvent.rotationDegrees);
+            Vector3 leftRotateVector = new Vector3(0, 0, -wEvent.rotationDegrees);
+
+            Sequence sequence = DOTween.Sequence(); // create a sequence
+            sequence.Append(wEvent.transformToWiggle.DORotate(rightRotateVector, wEvent.wiggleSpeed / 2f)); 
+            sequence.Append(wEvent.transformToWiggle.DORotate(leftRotateVector, wEvent.wiggleSpeed));
+            sequence.Append(wEvent.transformToWiggle.DORotate(new Vector3(0,0,0), wEvent.wiggleSpeed));
+            sequence.SetLoops(wEvent.numberOfWiggles); 
         }
     }
 

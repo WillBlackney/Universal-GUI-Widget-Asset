@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 namespace BlackneyStudios.GuiWidget
 {
     public class Widget : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
-    {
+    {     
 
         // Variables + Component References
         #region
@@ -27,6 +27,9 @@ namespace BlackneyStudios.GuiWidget
         private bool pointerIsOverMe;
         private float timeSinceLastPointerEnter;
         [PropertySpace(SpaceBefore = 20, SpaceAfter = 0)]
+
+        [Header("Misc Properties")]
+        private bool hasRunSetup = false;
         #endregion
 
         //  Properties + Accessors
@@ -111,7 +114,66 @@ namespace BlackneyStudios.GuiWidget
                 PointerIsOverMe = false;
                 WidgetController.Instance.HandleWidgetEvents(this, MouseExitEvents);
             }
-        }      
+        }
+        #endregion
+
+        // Setup + Initialization
+        #region
+        void Start()
+        {
+            // Runs the setup as soon as the application is launched.
+            // NOTE: 'Start' is only executed on game objects that are active, if the
+            // game object is disabled when the application starts, the set up will not run.
+            // To remedy this, whenever this game object is enabled, it will check if the set up
+            // has already executed. If it hasn't, it will run the set up as part of the 'OnEnable' event.
+            if (!hasRunSetup)
+            {
+                RunSetup();
+            }
+        }
+        void OnEnable()
+        {
+            // If the set up was not executed during 'Start' (because this game object was disabled)
+            // then run the setup on first enable.
+            if (!hasRunSetup)
+            {
+                RunSetup();
+            }
+        }
+        void RunSetup()
+        {
+            // Set and cache original scaling values of transforms for shrink/enlarge/etc events,
+            // but only if the widget event manipulates a transform's scale is some way
+
+            // Set up on click events
+            for(int i = 0; i < onClickEvents.Length; i++)
+            {
+                if (OnClickEvents[i].transformToScale != null && !OnClickEvents[i].OriginalScaleIsSet)
+                {
+                    OnClickEvents[i].SetOriginalScale(OnClickEvents[i].transformToScale.localScale);
+                }
+            }
+
+            // Set up on mouse enter events
+            for (int i = 0; i < MouseEnterEvents.Length; i++)
+            {
+                if (MouseEnterEvents[i].transformToScale != null && !MouseEnterEvents[i].OriginalScaleIsSet)
+                {
+                    MouseEnterEvents[i].SetOriginalScale(MouseEnterEvents[i].transformToScale.localScale);
+                }
+            }
+
+            // Set up on mouse exit events
+            for (int i = 0; i < MouseExitEvents.Length; i++)
+            {
+                if (MouseExitEvents[i].transformToScale != null && !MouseExitEvents[i].OriginalScaleIsSet)
+                {
+                    MouseExitEvents[i].SetOriginalScale(MouseExitEvents[i].transformToScale.localScale);
+                }
+            }
+
+            hasRunSetup = true;
+        }
         #endregion
     }
 }

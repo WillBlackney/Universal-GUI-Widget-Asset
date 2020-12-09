@@ -53,10 +53,119 @@ namespace BlackneyStudios.GuiWidget
 
         [ShowIf("ShowFadeSpeed")]
         public float transistionSpeed;
+
+
+
+
+        // Shrink Propeties + Values
+        private bool originalScaleIsSet = false;
+        private Vector3 originalScale;
+
+        [Header("General Transform Settings")]
+        [ShowIf("ShowTransformToScale")]
+        public Transform transformToScale;
+
+        [Header("Enlarge Settings")]
+        [ShowIf("ShowPercentageSizeIncrease")]
+        [Range(1, 5f)]
+        public float percentageSizeIncrease = 1f;
+
+        [ShowIf("ShowEnlargeSpeed")]
+        public float enlargeSpeed = 0.5f;
+
+        [Header("Shrink Settings")]
+        [ShowIf("ShowPercentageSizeDecrease")]
+        [Range(0, 1f)]
+        public float percentageSizeDecrease = 1f;
+
+        [ShowIf("ShowShrinkSpeed")]
+        public float shrinkSpeed;
+
+        // Wiggle Properties
+        [Header("Wiggle Settings")]
+        [ShowIf("ShowWiggleType")]
+        public WiggleType wiggleType;
+
+        [ShowIf("ShowWiggleType")]
+        public Transform transformToWiggle;
+
+        [ShowIf("ShowWiggleType")]
+        public float wiggleSpeed;
+
+        [ShowIf("ShowWiggleType")]
+        public bool wiggleInfinetly = false;
+
+        [ShowIf("ShowNumberOfWiggles")]
+        public int numberOfWiggles;        
+
+        [ShowIf("ShowRotationDegrees")]
+        public float rotationDegrees;      
+
+        #endregion
+
+        // Accessors + Getters
+        #region
+        public bool OriginalScaleIsSet
+        {
+            get { return originalScaleIsSet; }
+            private set { originalScaleIsSet = value; }
+        }
+        public Vector3 OriginalScale
+        {
+            get { return originalScale; }
+            private set { originalScale = value; }
+        }
+        #endregion
+
+        // Misc Logic
+        #region
+        public void SetOriginalScale(Vector3 _originalScale)
+        {
+            OriginalScale = _originalScale;
+            OriginalScaleIsSet = true;
+        }
         #endregion
 
         // Conditional Inspector View Logic
         #region
+        public bool ShowWiggleType()
+        {
+            return widgetEventType == WidgetEvent.Wiggle;
+        }
+        public bool ShowNumberOfWiggles()
+        {
+            return widgetEventType == WidgetEvent.Wiggle &&
+                wiggleInfinetly == false;
+        }
+        public bool ShowRotationDegrees()
+        {
+            return widgetEventType == WidgetEvent.Wiggle &&
+                wiggleType == WiggleType.RotateOnTheSpot;
+        }
+        public bool ShowEnlargeSpeed()
+        {
+            return widgetEventType == WidgetEvent.Enlarge ||
+                widgetEventType == WidgetEvent.EnlargeAndShrink;
+        }
+        public bool ShowShrinkSpeed()
+        {
+            return widgetEventType == WidgetEvent.Shrink ||
+                widgetEventType == WidgetEvent.EnlargeAndShrink;
+        }
+        public bool ShowTransformToScale()
+        {
+            return widgetEventType == WidgetEvent.Enlarge ||
+                widgetEventType == WidgetEvent.Shrink ||
+                widgetEventType == WidgetEvent.EnlargeAndShrink;
+        }
+        public bool ShowPercentageSizeIncrease()
+        {
+            return widgetEventType == WidgetEvent.Enlarge || widgetEventType == WidgetEvent.EnlargeAndShrink;
+        }
+        public bool ShowPercentageSizeDecrease()
+        {
+            return widgetEventType == WidgetEvent.Shrink || widgetEventType == WidgetEvent.EnlargeAndShrink;
+        }
         public bool ShowDelayProperties()
         {
             return widgetEventType == WidgetEvent.EnableGameObject ||
@@ -101,10 +210,20 @@ namespace BlackneyStudios.GuiWidget
         FadeOutImage = 8,
         TransisitionImageColour = 9,
         TransistionTextColour = 10,
+        Enlarge = 11,
+        Shrink = 12,
+        EnlargeAndShrink =13,
+        Wiggle = 14,
     }
     public enum WidgetInputType
     {
         IPointer = 0,
         Collider = 1,
+    }
+    public enum WiggleType
+    {
+        RotateOnTheSpot = 0,
+        SideToSide = 1,
+        UpAndDown = 2,
     }
 }
