@@ -57,7 +57,7 @@ namespace BlackneyStudios.GuiWidget
 
 
 
-        // Shrink Propeties + Values
+        // Scaling Properties + Values
         private bool originalScaleIsSet = false;
         private Vector3 originalScale;
 
@@ -81,13 +81,21 @@ namespace BlackneyStudios.GuiWidget
         [ShowIf("ShowShrinkSpeed")]
         public float shrinkSpeed;
 
+
+
         // Wiggle Properties
+        private bool originalPositionIsSet = false;
+        private Vector3 originalPosition;
+
         [Header("Wiggle Settings")]
         [ShowIf("ShowWiggleType")]
         public WiggleType wiggleType;
 
         [ShowIf("ShowWiggleType")]
         public Transform transformToWiggle;
+
+        [ShowIf("ShowWiggleDistance")]
+        public float wiggleDistance;
 
         [ShowIf("ShowWiggleType")]
         public float wiggleSpeed;
@@ -96,7 +104,7 @@ namespace BlackneyStudios.GuiWidget
         public bool wiggleInfinetly = false;
 
         [ShowIf("ShowNumberOfWiggles")]
-        public int numberOfWiggles;        
+        public int wiggleLoops;        
 
         [ShowIf("ShowRotationDegrees")]
         public float rotationDegrees;      
@@ -115,19 +123,39 @@ namespace BlackneyStudios.GuiWidget
             get { return originalScale; }
             private set { originalScale = value; }
         }
+        public bool OriginalPositionIsSet
+        {
+            get { return originalPositionIsSet; }
+            private set { originalPositionIsSet = value; }
+        }
+        public Vector3 OriginalPosition
+        {
+            get { return originalPosition; }
+            private set { originalPosition = value; }
+        }
         #endregion
 
         // Misc Logic
         #region
-        public void SetOriginalScale(Vector3 _originalScale)
+        public void SetOriginalScale(Vector3 originalScale)
         {
-            OriginalScale = _originalScale;
+            OriginalScale = originalScale;
             OriginalScaleIsSet = true;
+        }
+        public void SetOriginalPosition(Vector3 originalPosition)
+        {
+            OriginalPosition = originalPosition;
+            OriginalPositionIsSet = true;
         }
         #endregion
 
         // Conditional Inspector View Logic
         #region
+        public bool ShowWiggleDistance()
+        {
+            return widgetEventType == WidgetEvent.Wiggle &&
+                (wiggleType == WiggleType.SideToSide || wiggleType == WiggleType.UpAndDown);
+        }
         public bool ShowWiggleType()
         {
             return widgetEventType == WidgetEvent.Wiggle;

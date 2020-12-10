@@ -152,6 +152,10 @@ namespace BlackneyStudios.GuiWidget
                 {
                     OnClickEvents[i].SetOriginalScale(OnClickEvents[i].transformToScale.localScale);
                 }
+                if (OnClickEvents[i].transformToWiggle != null && !OnClickEvents[i].OriginalPositionIsSet)
+                {
+                    OnClickEvents[i].SetOriginalPosition(OnClickEvents[i].transformToWiggle.localPosition);
+                }
             }
 
             // Set up on mouse enter events
@@ -161,6 +165,10 @@ namespace BlackneyStudios.GuiWidget
                 {
                     MouseEnterEvents[i].SetOriginalScale(MouseEnterEvents[i].transformToScale.localScale);
                 }
+                if (MouseEnterEvents[i].transformToWiggle != null && !MouseEnterEvents[i].OriginalPositionIsSet)
+                {
+                    MouseEnterEvents[i].SetOriginalPosition(MouseEnterEvents[i].transformToWiggle.localPosition);
+                }
             }
 
             // Set up on mouse exit events
@@ -169,6 +177,10 @@ namespace BlackneyStudios.GuiWidget
                 if (MouseExitEvents[i].transformToScale != null && !MouseExitEvents[i].OriginalScaleIsSet)
                 {
                     MouseExitEvents[i].SetOriginalScale(MouseExitEvents[i].transformToScale.localScale);
+                }
+                if (MouseExitEvents[i].transformToWiggle != null && !MouseExitEvents[i].OriginalPositionIsSet)
+                {
+                    MouseExitEvents[i].SetOriginalPosition(MouseExitEvents[i].transformToWiggle.localPosition);
                 }
             }
 
