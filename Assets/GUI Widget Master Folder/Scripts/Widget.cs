@@ -156,6 +156,10 @@ namespace BlackneyStudios.GuiWidget
                 {
                     OnClickEvents[i].SetOriginalPosition(OnClickEvents[i].transformToWiggle.localPosition);
                 }
+                if (OnClickEvents[i].transformToWiggle != null && !OnClickEvents[i].OriginalRotationIsSet)
+                {
+                    OnClickEvents[i].SetOriginalRotation(OnClickEvents[i].transformToWiggle.localRotation.eulerAngles);
+                }
             }
 
             // Set up on mouse enter events
@@ -169,6 +173,10 @@ namespace BlackneyStudios.GuiWidget
                 {
                     MouseEnterEvents[i].SetOriginalPosition(MouseEnterEvents[i].transformToWiggle.localPosition);
                 }
+                if (MouseEnterEvents[i].transformToWiggle != null && !MouseEnterEvents[i].OriginalRotationIsSet)
+                {
+                    MouseEnterEvents[i].SetOriginalRotation(MouseEnterEvents[i].transformToWiggle.localRotation.eulerAngles);
+                }
             }
 
             // Set up on mouse exit events
@@ -181,6 +189,10 @@ namespace BlackneyStudios.GuiWidget
                 if (MouseExitEvents[i].transformToWiggle != null && !MouseExitEvents[i].OriginalPositionIsSet)
                 {
                     MouseExitEvents[i].SetOriginalPosition(MouseExitEvents[i].transformToWiggle.localPosition);
+                }
+                if (MouseExitEvents[i].transformToWiggle != null && !MouseExitEvents[i].OriginalRotationIsSet)
+                {
+                    MouseExitEvents[i].SetOriginalRotation(MouseExitEvents[i].transformToWiggle.localRotation.eulerAngles);
                 }
             }
 

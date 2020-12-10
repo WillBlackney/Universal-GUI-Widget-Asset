@@ -111,7 +111,7 @@ namespace BlackneyStudios.GuiWidget
                 // Scale the transform to its new size
                 wEvent.transformToScale.DOScale(endScale, wEvent.shrinkSpeed);
             }
-            else if (wEvent.widgetEventType == WidgetEvent.EnlargeAndShrink)
+            else if (wEvent.widgetEventType == WidgetEvent.Breathe)
             {
                 // Kill off any active animations on the transform
                // wEvent.transformToWiggle.DOKill();
@@ -129,11 +129,24 @@ namespace BlackneyStudios.GuiWidget
                 // Create an animation sequence chain
                 Sequence s = DOTween.Sequence();
 
-                // Add the enlargment animation to the sequence, then play it
-                s.Append(wEvent.transformToScale.DOScale(enlargeScale, wEvent.enlargeSpeed));
+                if(wEvent.scalingSequence == ScaleEventOrder.EnlargeThenShrink)
+                {
+                    // Add the enlargment animation to the sequence, then play it
+                    s.Append(wEvent.transformToScale.DOScale(enlargeScale, wEvent.enlargeSpeed));
 
-                // Once the enlargment sequence is complete, play the shrink animation
-                s.OnComplete(() => wEvent.transformToScale.DOScale(decreaseScale, wEvent.shrinkSpeed));                
+                    // Once the enlargment sequence is complete, play the shrink animation
+                    s.OnComplete(() => wEvent.transformToScale.DOScale(decreaseScale, wEvent.shrinkSpeed));
+                }
+                else if (wEvent.scalingSequence == ScaleEventOrder.ShrinkThenEnlarge)
+                {
+                    // Add the enlargment animation to the sequence, then play it
+                    s.Append(wEvent.transformToScale.DOScale(decreaseScale, wEvent.shrinkSpeed));
+
+                    // Once the enlargment sequence is complete, play the shrink animation
+                    s.OnComplete(() => wEvent.transformToScale.DOScale(enlargeScale, wEvent.enlargeSpeed));
+                }
+
+
             }
             else if (wEvent.widgetEventType == WidgetEvent.Wiggle &&
                 wEvent.wiggleType == WiggleType.RotateOnTheSpot)
@@ -198,22 +211,22 @@ namespace BlackneyStudios.GuiWidget
         #region
         private void WiggleOnTheSpot(WidgetEventData wEvent)
         {
-            Vector3 rightRotateVector = new Vector3(0, 0, wEvent.rotationDegrees);
-            Vector3 leftRotateVector = new Vector3(0, 0, -wEvent.rotationDegrees);
+            Vector3 rightRotateVector = new Vector3(wEvent.OriginalRotation.x, wEvent.OriginalRotation.y,wEvent.OriginalRotation.z + wEvent.rotationDegrees);
+            Vector3 leftRotateVector = new Vector3(wEvent.OriginalRotation.x, wEvent.OriginalRotation.y, wEvent.OriginalRotation.z - wEvent.rotationDegrees);
 
-            int wiggleCount = wEvent.wiggleLoops;
+            int wiggleCount = wEvent.wiggleLoops +1;
             if (wEvent.wiggleInfinetly)
                 wiggleCount = -1;
 
             Sequence s = DOTween.Sequence(); 
             s.Append(wEvent.transformToWiggle.DORotate(rightRotateVector, wEvent.wiggleSpeed / 2f)); 
             s.Append(wEvent.transformToWiggle.DORotate(leftRotateVector, wEvent.wiggleSpeed));
-            s.Append(wEvent.transformToWiggle.DORotate(new Vector3(0,0,0), wEvent.wiggleSpeed));
+            s.Append(wEvent.transformToWiggle.DORotate(wEvent.OriginalRotation, wEvent.wiggleSpeed));
             s.SetLoops(wiggleCount); 
         }
         private void WiggleSideToSide(WidgetEventData wEvent)
         {
-            int wiggleCount = wEvent.wiggleLoops;
+            int wiggleCount = wEvent.wiggleLoops +1;
             if (wEvent.wiggleInfinetly)
                 wiggleCount = -1;
 
@@ -230,7 +243,7 @@ namespace BlackneyStudios.GuiWidget
 
         private void WiggleUpAndDown(WidgetEventData wEvent)
         {
-            int wiggleCount = wEvent.wiggleLoops;
+            int wiggleCount = wEvent.wiggleLoops + 1;
             if (wEvent.wiggleInfinetly)
                 wiggleCount = -1;
 
