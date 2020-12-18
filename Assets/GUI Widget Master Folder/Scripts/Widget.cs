@@ -143,7 +143,7 @@ namespace BlackneyStudios.GuiWidget
         void RunSetup()
         {
             // Set and cache original scaling values of transforms for shrink/enlarge/etc events,
-            // but only if the widget event manipulates a transform's scale is some way
+            // but only if the widget event manipulates a transform's scale in some way
 
             // Set up on click events
             for(int i = 0; i < onClickEvents.Length; i++)
