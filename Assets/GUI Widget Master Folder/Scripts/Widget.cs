@@ -12,15 +12,23 @@ namespace BlackneyStudios.GuiWidget
         // Variables + Component References
         #region
         [Header("Core Properties")]
+        [Tooltip("Sets the type of input events this Widget should intercept and listen for.")]
         public WidgetInputType inputType;
         [PropertySpace(SpaceBefore = 20, SpaceAfter = 0)]
 
         [Header("Event Data")]
+        [Tooltip("Events that will be triggered when the Widget is clicked")]
         [SerializeField] WidgetEventData[] onClickEvents;
         [PropertySpace(SpaceBefore = 20, SpaceAfter = 0)]
+
+        [Tooltip("Events that will be triggered during the first frame in which the user moves their mouse " +
+            "within the volume of the Widget's Rect Transform or Collider component.")]
         [SerializeField] WidgetEventData[] mouseEnterEvents;
         [PropertySpace(SpaceBefore = 20, SpaceAfter = 0)]
-        [SerializeField] WidgetEventData[] mouseExitEvents;
+
+        [Tooltip("Events that will be triggered during the first frame in which the user moves their mouse" +
+            " outside the volume of the Widget's Rect Transform or Collider component.")]
+        [SerializeField] WidgetEventData[] mouseExitEvents;       
         [PropertySpace(SpaceBefore = 20, SpaceAfter = 0)]
 
         [Header("Input State")]

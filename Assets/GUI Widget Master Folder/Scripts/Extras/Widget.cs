@@ -32,29 +32,35 @@ namespace BlackneyStudios.GUIWidget
         // IPointer Event Listeners
         public void OnPointerClick(PointerEventData eventData)
         {
-            Debug.Log("UI click detected on " + this.gameObject.name);
+            if (inputType == WidgetInputType.IPointer)
+                WidgetController.Instance.HandleWidgetEventsAsBatch(MouseClickEvents);
         }
         public void OnPointerEnter(PointerEventData eventData)
         {
-            throw new System.NotImplementedException();
+            if (inputType == WidgetInputType.IPointer)
+                WidgetController.Instance.HandleWidgetEventsAsBatch(MouseEnterEvents);
         }
         public void OnPointerExit(PointerEventData eventData)
         {
-            throw new System.NotImplementedException();
+            if (inputType == WidgetInputType.IPointer)
+                WidgetController.Instance.HandleWidgetEventsAsBatch(MouseExitEvents);
         }
 
         // Collider Input Listeners
         private void OnMouseDown()
         {
-            Debug.Log("Collider click detected on " + this.gameObject.name);
+            if (inputType == WidgetInputType.Collider)
+                WidgetController.Instance.HandleWidgetEventsAsBatch(MouseClickEvents);
         }
         private void OnMouseEnter()
         {
-
+            if (inputType == WidgetInputType.Collider)
+                WidgetController.Instance.HandleWidgetEventsAsBatch(MouseEnterEvents);
         }
         private void OnMouseExit()
         {
-
+            if (inputType == WidgetInputType.Collider)
+                WidgetController.Instance.HandleWidgetEventsAsBatch(MouseExitEvents);
         }
     }
 
