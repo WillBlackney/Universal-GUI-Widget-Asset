@@ -52,45 +52,37 @@ namespace BlackneyStudios.GuiWidget
             }
             else if (wEvent.widgetEventType == WidgetEvent.FadeInCanvasGroup)
             {
-                //wEvent.canvasGroup.DOKill();
                 wEvent.canvasGroup.alpha = 0;
                 wEvent.canvasGroup.DOFade(1, wEvent.transistionSpeed);
             }
             else if (wEvent.widgetEventType == WidgetEvent.FadeOutCanvasGroup)
             {
-               // wEvent.canvasGroup.DOKill();
                 wEvent.canvasGroup.alpha = 1;
                 wEvent.canvasGroup.DOFade(0, wEvent.transistionSpeed);
             }
             else if (wEvent.widgetEventType == WidgetEvent.FadeInImage)
             {
-                //wEvent.image.DOKill();
                 wEvent.image.DOFade(0, 0);
                 wEvent.image.DOFade(1, wEvent.transistionSpeed);
             }
             else if (wEvent.widgetEventType == WidgetEvent.FadeOutImage)
             {
-               // wEvent.image.DOKill();
                 wEvent.image.DOFade(1, 0);
                 wEvent.image.DOFade(0, wEvent.transistionSpeed);
             }
 
             else if (wEvent.widgetEventType == WidgetEvent.TransisitionImageColour)
             {
-                //wEvent.image.DOKill();
                 wEvent.image.DOColor(wEvent.endColour, wEvent.transistionSpeed);
             }
 
             else if (wEvent.widgetEventType == WidgetEvent.TransistionTextColour)
             {
-                //wEvent.text.DOKill();
                 wEvent.text.DOColor(wEvent.endColour, wEvent.transistionSpeed);
             }
+
             else if (wEvent.widgetEventType == WidgetEvent.Enlarge)
             {
-                // Kill off any active animations on the transform
-                //wEvent.transformToScale.DOKill();
-
                 // Calculate enlargement scale and convert it to to a vector 3
                 Vector3 endScale = new Vector3(wEvent.OriginalScale.x * wEvent.percentageSizeIncrease,
                     wEvent.OriginalScale.y * wEvent.percentageSizeIncrease,
@@ -101,9 +93,7 @@ namespace BlackneyStudios.GuiWidget
             }
             else if (wEvent.widgetEventType == WidgetEvent.Shrink)
             {
-                // Kill off any active animations on the transform
-                //wEvent.transformToScale.DOKill();
-
+                // Calculate shrinking scale and convert it to to a vector 3
                 Vector3 endScale = new Vector3(wEvent.OriginalScale.x * wEvent.percentageSizeDecrease,
                     wEvent.OriginalScale.y * wEvent.percentageSizeDecrease,
                     wEvent.OriginalScale.z * wEvent.percentageSizeDecrease);
@@ -111,11 +101,9 @@ namespace BlackneyStudios.GuiWidget
                 // Scale the transform to its new size
                 wEvent.transformToScale.DOScale(endScale, wEvent.shrinkSpeed);
             }
+
             else if (wEvent.widgetEventType == WidgetEvent.Breathe)
             {
-                // Kill off any active animations on the transform
-               // wEvent.transformToWiggle.DOKill();
-
                 // Calculate enlargement scale and convert it to to a vector 3
                 Vector3 enlargeScale = new Vector3(wEvent.OriginalScale.x * wEvent.percentageSizeIncrease,
                     wEvent.OriginalScale.y * wEvent.percentageSizeIncrease,
@@ -148,6 +136,49 @@ namespace BlackneyStudios.GuiWidget
 
 
             }
+            else if (wEvent.widgetEventType == WidgetEvent.Move)
+            {
+                if(wEvent.movementType == MovementType.ReturnToOriginalPosition)
+                {
+                    wEvent.transformToMove.DOLocalMove(wEvent.OriginalPosition, wEvent.transistionSpeed);
+                }
+                else if (wEvent.movementType == MovementType.Left)
+                {
+                    // Snap move object to it's starting position
+                    wEvent.transformToMove.DOLocalMove(wEvent.OriginalPosition, 0f);
+                    // Start move sequence
+                    Sequence s = DOTween.Sequence();
+                    // 1. Move from start position towards right position
+                    s.Append(wEvent.transformToMove.DOLocalMoveX(wEvent.OriginalPosition.x - wEvent.moveDistance, wEvent.transistionSpeed));
+                }
+                else if (wEvent.movementType == MovementType.Right)
+                {
+                    // Snap move object to it's starting position
+                    wEvent.transformToMove.DOLocalMove(wEvent.OriginalPosition, 0f);
+                    // Start move sequence
+                    Sequence s = DOTween.Sequence();
+                    // 1. Move from start position towards right position
+                    s.Append(wEvent.transformToMove.DOLocalMoveX(wEvent.OriginalPosition.x + wEvent.moveDistance, wEvent.transistionSpeed));
+                }
+                else if (wEvent.movementType == MovementType.Up)
+                {
+                    // Snap move object to it's starting position
+                    wEvent.transformToMove.DOLocalMove(wEvent.OriginalPosition, 0f);
+                    // Start move sequence
+                    Sequence s = DOTween.Sequence();
+                    // 1. Move from start position towards right position
+                    s.Append(wEvent.transformToMove.DOLocalMoveY(wEvent.OriginalPosition.y + wEvent.moveDistance, wEvent.transistionSpeed));
+                }
+                else if (wEvent.movementType == MovementType.Down)
+                {
+                    // Snap move object to it's starting position
+                    wEvent.transformToMove.DOLocalMove(wEvent.OriginalPosition, 0f);
+                    // Start move sequence
+                    Sequence s = DOTween.Sequence();
+                    // 1. Move from start position towards right position
+                    s.Append(wEvent.transformToMove.DOLocalMoveY(wEvent.OriginalPosition.y - wEvent.moveDistance, wEvent.transistionSpeed));
+                }
+            }
             else if (wEvent.widgetEventType == WidgetEvent.Wiggle &&
                 wEvent.wiggleType == WiggleType.RotateOnTheSpot)
             {
@@ -175,33 +206,27 @@ namespace BlackneyStudios.GuiWidget
             {
                 // Kill transform scaling anims
                 if(widget.OnClickEvents[i].transformToScale != null)
-                {
-                    widget.OnClickEvents[i].transformToScale.DOKill();
-                }
+                    widget.OnClickEvents[i].transformToScale.DOKill();                
 
                 // Kill wiggle anims
                 if (widget.OnClickEvents[i].transformToWiggle != null)
-                {
-                    widget.OnClickEvents[i].transformToWiggle.DOKill();
-                }
+                    widget.OnClickEvents[i].transformToWiggle.DOKill();                
 
                 // Kill image anims
                 if (widget.OnClickEvents[i].image != null)
-                {
-                    widget.OnClickEvents[i].image.DOKill();
-                }
+                    widget.OnClickEvents[i].image.DOKill();                
 
                 // Kill cg anims
                 if (widget.OnClickEvents[i].canvasGroup != null)
-                {
-                    widget.OnClickEvents[i].canvasGroup.DOKill();
-                }
+                    widget.OnClickEvents[i].canvasGroup.DOKill();                
 
                 // Kill text anims
                 if (widget.OnClickEvents[i].text != null)
-                {
                     widget.OnClickEvents[i].text.DOKill();
-                }
+
+                // Kill move anims
+                if (widget.OnClickEvents[i].transformToMove != null)
+                    widget.OnClickEvents[i].transformToMove.DOKill();
 
             }
         }
@@ -211,38 +236,54 @@ namespace BlackneyStudios.GuiWidget
         #region
         private void WiggleOnTheSpot(WidgetEventData wEvent)
         {
-            Vector3 rightRotateVector = new Vector3(wEvent.OriginalRotation.x, wEvent.OriginalRotation.y,wEvent.OriginalRotation.z + wEvent.rotationDegrees);
-            Vector3 leftRotateVector = new Vector3(wEvent.OriginalRotation.x, wEvent.OriginalRotation.y, wEvent.OriginalRotation.z - wEvent.rotationDegrees);
+            // Calculate the left and right rotation positions, relative to current rotation position
+            Vector3 rightRotateVector = new Vector3
+                (wEvent.OriginalRotation.x, wEvent.OriginalRotation.y,wEvent.OriginalRotation.z + wEvent.rotationDegrees);
+            Vector3 leftRotateVector = new Vector3
+                (wEvent.OriginalRotation.x, wEvent.OriginalRotation.y, wEvent.OriginalRotation.z - wEvent.rotationDegrees);
 
+            // Wiggle infinetly?
             int wiggleCount = wEvent.wiggleLoops +1;
             if (wEvent.wiggleInfinetly)
                 wiggleCount = -1;
 
+            // Start the rotation !
             Sequence s = DOTween.Sequence(); 
-            s.Append(wEvent.transformToWiggle.DORotate(rightRotateVector, wEvent.wiggleSpeed / 2f)); 
+
+            // 1. Rotate from start position towards right rotation position
+            s.Append(wEvent.transformToWiggle.DORotate(rightRotateVector, wEvent.wiggleSpeed / 2f));
+            // 2. Rotate from right position towards left rotation position
             s.Append(wEvent.transformToWiggle.DORotate(leftRotateVector, wEvent.wiggleSpeed));
+            // 3. Rotate from left position back towards starting roation position
             s.Append(wEvent.transformToWiggle.DORotate(wEvent.OriginalRotation, wEvent.wiggleSpeed));
+            // Repeat the event, if the user has marked to do so
             s.SetLoops(wiggleCount); 
         }
         private void WiggleSideToSide(WidgetEventData wEvent)
         {
+            // How many times should this move side to side?
             int wiggleCount = wEvent.wiggleLoops +1;
             if (wEvent.wiggleInfinetly)
                 wiggleCount = -1;
 
-            // Move back to start pos
+            // Snap move object to it's starting position
             wEvent.transformToWiggle.DOLocalMove(wEvent.OriginalPosition, 0f);
 
-            // Start move
-            Sequence s = DOTween.Sequence(); 
+            // Start move sequence
+            Sequence s = DOTween.Sequence();
+            // 1. Move from start position towards right position
             s.Append(wEvent.transformToWiggle.DOLocalMoveX(wEvent.OriginalPosition.x + (wEvent.wiggleDistance / 2f), wEvent.wiggleSpeed / 2f));
+            // 2. Move from right position towards left position
             s.Append(wEvent.transformToWiggle.DOLocalMoveX(wEvent.OriginalPosition.x - wEvent.wiggleDistance, wEvent.wiggleSpeed));
+            // 3. Move from left position back towards starting position
             s.Append(wEvent.transformToWiggle.DOLocalMoveX(wEvent.OriginalPosition.x + (wEvent.wiggleDistance / 2f), wEvent.wiggleSpeed / 2f));
+            // Repeat the event, if the user has marked to do so
             s.SetLoops(wiggleCount);
         }
 
         private void WiggleUpAndDown(WidgetEventData wEvent)
         {
+            // How many times should this move up and down?
             int wiggleCount = wEvent.wiggleLoops + 1;
             if (wEvent.wiggleInfinetly)
                 wiggleCount = -1;
@@ -251,9 +292,13 @@ namespace BlackneyStudios.GuiWidget
             wEvent.transformToWiggle.DOLocalMove(wEvent.OriginalPosition, 0f);
 
             Sequence s = DOTween.Sequence();
+            // 1. Move from start position towards north most position
             s.Append(wEvent.transformToWiggle.DOLocalMoveY(wEvent.OriginalPosition.y + (wEvent.wiggleDistance / 2f), wEvent.wiggleSpeed / 2f));
+            // 2. Move from north position towards south position
             s.Append(wEvent.transformToWiggle.DOLocalMoveY(wEvent.OriginalPosition.y - wEvent.wiggleDistance, wEvent.wiggleSpeed));
+            // 3. Move from south position back towards starting position
             s.Append(wEvent.transformToWiggle.DOLocalMoveY(wEvent.OriginalPosition.y + (wEvent.wiggleDistance / 2f), wEvent.wiggleSpeed / 2f));
+            // Repeat the event, if the user has marked to do so
             s.SetLoops(wiggleCount);
         }
         #endregion

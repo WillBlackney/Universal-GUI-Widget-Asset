@@ -63,14 +63,26 @@ namespace BlackneyStudios.GuiWidget
 
         [ShowIf("ShowEndColour")]
         [Tooltip("The colour the given element will transistion to.")]
-        public Color endColour;
+        public Color endColour;   
 
+
+        // Movement Properties + Values
+        [ShowIf("ShowMovementType")]
+        [Tooltip("The direction of the movement")]
+        public MovementType movementType;
+
+        [ShowIf("ShowTransformToMove")]
+        [Tooltip("The 'Transform' or 'Rect Transform' component that will be targetted by the move effect.")]
+        public Transform transformToMove;
+
+        [ShowIf("ShowMoveDistance")]
+        [Tooltip("The distance the specified transform component will move locally during the move event.")]
+        public float moveDistance;
+
+        // Shared Values
         [ShowIf("ShowFadeSpeed")]
         [Tooltip("The duration in seconds this event will take to complete (E.g. a value of 1 will take one second to complete. A value of 0 will make the event complete instantly).")]
         public float transistionSpeed;
-
-
-
 
         // Scaling Properties + Values
         private bool originalScaleIsSet = false;
@@ -84,7 +96,8 @@ namespace BlackneyStudios.GuiWidget
         [Header("Enlarge Settings")]
         [ShowIf("ShowPercentageSizeIncrease")]
         [Range(1, 5f)]
-        [Tooltip("The amount as perctange that the transform's scale will increase, relative to its original scale (E.g. A value of 2 will double this transform's scale/size).")]
+        [Tooltip("The amount as perctange that the transform's scale will increase, relative to its original scale" +
+            " (E.g. A value of 2 will double this transform's scale/size).")]
         public float percentageSizeIncrease = 1f;
 
         [ShowIf("ShowEnlargeSpeed")]
@@ -94,7 +107,8 @@ namespace BlackneyStudios.GuiWidget
         [Header("Shrink Settings")]
         [ShowIf("ShowPercentageSizeDecrease")]
         [Range(0, 1f)]
-        [Tooltip("The amount as perctange that the transform's scale will decrease, relative to its original scale (E.g. A value of 0.3 will reduce this transform's scale/size to 30% of its original size).")]
+        [Tooltip("The amount as perctange that the transform's scale will decrease, relative to its original scale" +
+            " (E.g. A value of 0.3 will reduce this transform's scale/size to 30% of its original size).")]
         public float percentageSizeDecrease = 1f;
 
         [ShowIf("ShowShrinkSpeed")]
@@ -136,7 +150,8 @@ namespace BlackneyStudios.GuiWidget
         public int wiggleLoops = 0;        
 
         [ShowIf("ShowRotationDegrees")]
-        [Tooltip("The amount in degrees by which the transform's rotation Z value will change, relative to its original rotation (E.g. a value of +90 will rotate the transform clockwise to a 90 degree angle. A value of -180 will rotate the transform anti clockwise by 180 degrees, essentially flipping it upside down).")]
+        [Tooltip("The amount in degrees by which the transform's rotation Z value will change, relative to its original rotation" +
+            " (E.g. a value of +90 will rotate the transform clockwise to a 90 degree angle. A value of -180 will rotate the transform anti clockwise by 180 degrees, essentially flipping it upside down).")]
         public float rotationDegrees;      
 
         #endregion
@@ -270,7 +285,20 @@ namespace BlackneyStudios.GuiWidget
                    widgetEventType == WidgetEvent.FadeInImage ||
                    widgetEventType == WidgetEvent.FadeOutImage ||
                    widgetEventType == WidgetEvent.TransisitionImageColour ||
-                   widgetEventType == WidgetEvent.TransistionTextColour;
+                   widgetEventType == WidgetEvent.TransistionTextColour ||
+                   widgetEventType == WidgetEvent.Move;
+        }
+        public bool ShowMovementType()
+        {
+            return widgetEventType == WidgetEvent.Move;
+        }
+        public bool ShowMoveDistance()
+        {
+            return widgetEventType == WidgetEvent.Move && movementType != MovementType.ReturnToOriginalPosition;
+        }
+        public bool ShowTransformToMove()
+        {
+            return widgetEventType == WidgetEvent.Move;
         }
         #endregion
     }
@@ -278,13 +306,14 @@ namespace BlackneyStudios.GuiWidget
     {
         None = 0,
         EnableGameObject = 1,
-        DisableGameObject = 2,
-        InvokeFunction = 3,
-        PlaySound = 4,
+        DisableGameObject = 2,           
         FadeInCanvasGroup = 5,
         FadeOutCanvasGroup = 6,
         FadeInImage = 7,
         FadeOutImage = 8,
+        InvokeFunction = 3,
+        Move = 15,
+        PlaySound = 4,
         TransisitionImageColour = 9,
         TransistionTextColour = 10,
         Enlarge = 11,
@@ -307,5 +336,13 @@ namespace BlackneyStudios.GuiWidget
     {
         EnlargeThenShrink = 0,
         ShrinkThenEnlarge = 1,
+    }
+    public enum MovementType
+    {
+        Left = 0,
+        Right = 1,
+        Up = 2,
+        Down = 3,
+        ReturnToOriginalPosition = 4,
     }
 }
