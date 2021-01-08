@@ -76,6 +76,7 @@ namespace BlackneyStudios.GuiWidget
         {
             if (inputType == WidgetInputType.IPointer)
             {
+                Debugger.Log("Widget.OnPointerClick() called on game object: " + gameObject.name);
                 WidgetController.Instance.HandleWidgetEvents(this, OnClickEvents);
             }
         }
@@ -83,6 +84,7 @@ namespace BlackneyStudios.GuiWidget
         {
             if (inputType == WidgetInputType.IPointer)
             {
+                Debugger.Log("Widget.OnPointerEnter() called on game object: " + gameObject.name);
                 PointerIsOverMe = true;
                 TimeSinceLastPointerEnter = Time.realtimeSinceStartup;
                 WidgetController.Instance.HandleWidgetEvents(this, MouseEnterEvents);
@@ -93,6 +95,7 @@ namespace BlackneyStudios.GuiWidget
         {
             if (inputType == WidgetInputType.IPointer)
             {
+                Debugger.Log("Widget.OnPointerExit() called on game object: " + gameObject.name);
                 PointerIsOverMe = false;
                 WidgetController.Instance.HandleWidgetEvents(this, MouseExitEvents);
             }
@@ -103,6 +106,7 @@ namespace BlackneyStudios.GuiWidget
         {
             if (inputType == WidgetInputType.Collider)
             {
+                Debugger.Log("Widget.OnMouseDown() called on game object: " + gameObject.name);
                 WidgetController.Instance.HandleWidgetEvents(this, OnClickEvents);
             }
         }
@@ -110,6 +114,7 @@ namespace BlackneyStudios.GuiWidget
         {
             if (inputType == WidgetInputType.Collider)
             {
+                Debugger.Log("Widget.OnMouseEnter() called on game object: " + gameObject.name);
                 PointerIsOverMe = true;
                 TimeSinceLastPointerEnter = Time.realtimeSinceStartup;
                 WidgetController.Instance.HandleWidgetEvents(this, MouseEnterEvents);
@@ -119,6 +124,7 @@ namespace BlackneyStudios.GuiWidget
         {
             if (inputType == WidgetInputType.Collider)
             {
+                Debugger.Log("Widget.OnMouseExit() called on game object: " + gameObject.name);
                 PointerIsOverMe = false;
                 WidgetController.Instance.HandleWidgetEvents(this, MouseExitEvents);
             }
@@ -129,6 +135,7 @@ namespace BlackneyStudios.GuiWidget
         #region
         void Start()
         {
+            Debugger.Log("Widget.Start() called on game object: " + gameObject.name);
             // Runs the setup as soon as the application is launched.
             // NOTE: 'Start' is only executed on game objects that are active, if the
             // game object is disabled when the application starts, the set up will not run.
@@ -136,25 +143,29 @@ namespace BlackneyStudios.GuiWidget
             // has already executed. If it hasn't, it will run the set up as part of the 'OnEnable' event.
             if (!hasRunSetup)
             {
+                Debugger.Log("Widget.Start() set up routine has not run yet.");
                 RunSetup();
             }
         }
         void OnEnable()
         {
+            Debugger.Log("Widget.OnEnable() called on game object: " + gameObject.name);
             // If the set up was not executed during 'Start' (because this game object was disabled)
             // then run the setup on first enable.
             if (!hasRunSetup)
             {
+                Debugger.Log("Widget.OnEnable() set up routine has not run yet.");
                 RunSetup();
             }
         }
         void RunSetup()
         {
+            Debugger.Log("Widget.RunSetup() called on game object: " + gameObject.name);
             // Set and cache original scaling values of transforms for shrink/enlarge/etc events,
             // but only if the widget event manipulates a transform's scale in some way
 
             // Set up on click events
-            for(int i = 0; i < onClickEvents.Length; i++)
+            for (int i = 0; i < onClickEvents.Length; i++)
             {
                 if (OnClickEvents[i].transformToScale != null && !OnClickEvents[i].OriginalScaleIsSet)
                 {

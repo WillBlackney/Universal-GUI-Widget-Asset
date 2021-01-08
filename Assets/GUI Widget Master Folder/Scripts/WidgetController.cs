@@ -6,10 +6,14 @@ namespace BlackneyStudios.GuiWidget
 {
     public class WidgetController : Singleton<WidgetController>
     {
+
         // Core Logic for Handling Widget Events
         #region
         public void HandleWidgetEvents(Widget widget, WidgetEventData[] wEvents)
         {
+            Debugger.Log("WidgetController.HandleWidgetEvents() called on game object '" + widget.gameObject.name +
+                "', executing all widget events");
+
             // Stop + Kill any animations from previous events
             KillAllAnimationsOnWidget(widget);
 
@@ -20,6 +24,9 @@ namespace BlackneyStudios.GuiWidget
         }
         private IEnumerator HandleWidgetEvent(Widget widget, WidgetEventData wEvent)
         {
+            Debugger.Log("WidgetController.HandleWidgetEvent() called on game object: " + widget.gameObject.name + ", event type: " 
+                + wEvent.widgetEventType.ToString());
+
             // Wait for start delay
             if (wEvent.enableStartDelay)
             {
@@ -36,53 +43,131 @@ namespace BlackneyStudios.GuiWidget
 
             if (wEvent.widgetEventType == WidgetEvent.EnableGameObject)
             {
+                if(wEvent.objectToEnable == null)
+                {
+                    Debugger.LogWarning("::: WARNING ::: The widget on object " + widget.gameObject +
+                        " is trying to execute an event of type " + wEvent.widgetEventType.ToString() + ", but it's target GameObject " +
+                        "is null, did you forget to assign the value in the inspector?");
+                    yield break;
+                }
                 wEvent.objectToEnable.SetActive(true);
             }
             else if (wEvent.widgetEventType == WidgetEvent.DisableGameObject)
             {
+                if (wEvent.objectToDisable == null)
+                {
+                    Debugger.LogWarning("::: WARNING ::: The widget on object " + widget.gameObject +
+                        " is trying to execute an event of type " + wEvent.widgetEventType.ToString() + ", but it's target GameObject " +
+                        "is null, did you forget to assign the value in the inspector?");
+                    yield break;
+                }
                 wEvent.objectToDisable.SetActive(false);
             }
             else if (wEvent.widgetEventType == WidgetEvent.InvokeFunction)
             {
+                if (wEvent.functionInvoked == null)
+                {
+                    Debugger.LogWarning("::: WARNING ::: The widget on object " + widget.gameObject +
+                        " is trying to execute an event of type " + wEvent.widgetEventType.ToString() + ", but its target function to invoke " +
+                        "is null, did you forget to assign the value in the inspector?");
+                    yield break;
+                }
                 wEvent.functionInvoked.Invoke();
             }
             else if (wEvent.widgetEventType == WidgetEvent.PlaySound)
             {
+                if (wEvent.audioSettings == null)
+                {
+                    Debugger.LogWarning("::: WARNING ::: The widget on object " + widget.gameObject +
+                        " is trying to execute an event of type " + wEvent.widgetEventType.ToString() + ", but no audio model data was found" +
+                        ", did you forget to create this properties in the inspector?");
+                    yield break;
+                }
                 AudioController.Instance.HandlePlayAudio(wEvent.audioSettings);
             }
             else if (wEvent.widgetEventType == WidgetEvent.FadeInCanvasGroup)
             {
+                if (wEvent.canvasGroup == null)
+                {
+                    Debugger.LogWarning("::: WARNING ::: The widget on object " + widget.gameObject +
+                        " is trying to execute an event of type " + wEvent.widgetEventType.ToString() + ", but its target CanvasGroup component " +
+                        "is null, did you forget to assign the value in the inspector?");
+                    yield break;
+                }
                 wEvent.canvasGroup.alpha = 0;
                 wEvent.canvasGroup.DOFade(1, wEvent.transistionSpeed);
             }
             else if (wEvent.widgetEventType == WidgetEvent.FadeOutCanvasGroup)
             {
+                if (wEvent.canvasGroup == null)
+                {
+                    Debugger.LogWarning("::: WARNING ::: The widget on object " + widget.gameObject +
+                        " is trying to execute an event of type " + wEvent.widgetEventType.ToString() + ", but it's target CanvasGroup component " +
+                        "is null, did you forget to assign the value in the inspector?");
+                    yield break;
+                }
                 wEvent.canvasGroup.alpha = 1;
                 wEvent.canvasGroup.DOFade(0, wEvent.transistionSpeed);
             }
             else if (wEvent.widgetEventType == WidgetEvent.FadeInImage)
             {
+                if (wEvent.image == null)
+                {
+                    Debugger.LogWarning("::: WARNING ::: The widget on object " + widget.gameObject +
+                        " is trying to execute an event of type " + wEvent.widgetEventType.ToString() + ", but it's target Image component " +
+                        "is null, did you forget to assign the value in the inspector?");
+                    yield break;
+                }
                 wEvent.image.DOFade(0, 0);
                 wEvent.image.DOFade(1, wEvent.transistionSpeed);
             }
             else if (wEvent.widgetEventType == WidgetEvent.FadeOutImage)
             {
+                if (wEvent.image == null)
+                {
+                    Debugger.LogWarning("::: WARNING ::: The widget on object " + widget.gameObject +
+                        " is trying to execute an event of type " + wEvent.widgetEventType.ToString() + ", but it's target Image component " +
+                        "is null, did you forget to assign the value in the inspector?");
+                    yield break;
+                }
                 wEvent.image.DOFade(1, 0);
                 wEvent.image.DOFade(0, wEvent.transistionSpeed);
             }
 
             else if (wEvent.widgetEventType == WidgetEvent.TransisitionImageColour)
             {
+                if (wEvent.image == null)
+                {
+                    Debugger.LogWarning("::: WARNING ::: The widget on object " + widget.gameObject +
+                        " is trying to execute an event of type " + wEvent.widgetEventType.ToString() + ", but it's target Image component " +
+                        "is null, did you forget to assign the value in the inspector?");
+                    yield break;
+                }
                 wEvent.image.DOColor(wEvent.endColour, wEvent.transistionSpeed);
             }
 
             else if (wEvent.widgetEventType == WidgetEvent.TransistionTextColour)
             {
+                if (wEvent.text == null)
+                {
+                    Debugger.LogWarning("::: WARNING ::: The widget on object " + widget.gameObject +
+                        " is trying to execute an event of type " + wEvent.widgetEventType.ToString() + ", but it's target TextMeshProUGUI component " +
+                        "is null, did you forget to assign the value in the inspector?");
+                    yield break;
+                }
                 wEvent.text.DOColor(wEvent.endColour, wEvent.transistionSpeed);
             }
 
             else if (wEvent.widgetEventType == WidgetEvent.Enlarge)
             {
+                if (wEvent.transformToScale == null)
+                {
+                    Debugger.LogWarning("::: WARNING ::: The widget on object " + widget.gameObject +
+                        " is trying to execute an event of type " + wEvent.widgetEventType.ToString() + ", but it's target Transform component " +
+                        "is null, did you forget to assign the value in the inspector?");
+                    yield break;
+                }
+
                 // Calculate enlargement scale and convert it to to a vector 3
                 Vector3 endScale = new Vector3(wEvent.OriginalScale.x * wEvent.percentageSizeIncrease,
                     wEvent.OriginalScale.y * wEvent.percentageSizeIncrease,
@@ -93,6 +178,14 @@ namespace BlackneyStudios.GuiWidget
             }
             else if (wEvent.widgetEventType == WidgetEvent.Shrink)
             {
+                if (wEvent.transformToScale == null)
+                {
+                    Debugger.LogWarning("::: WARNING ::: The widget on object " + widget.gameObject +
+                        " is trying to execute an event of type " + wEvent.widgetEventType.ToString() + ", but it's target Transform component " +
+                        "is null, did you forget to assign the value in the inspector?");
+                    yield break;
+                }
+
                 // Calculate shrinking scale and convert it to to a vector 3
                 Vector3 endScale = new Vector3(wEvent.OriginalScale.x * wEvent.percentageSizeDecrease,
                     wEvent.OriginalScale.y * wEvent.percentageSizeDecrease,
@@ -104,6 +197,14 @@ namespace BlackneyStudios.GuiWidget
 
             else if (wEvent.widgetEventType == WidgetEvent.Breathe)
             {
+                if (wEvent.transformToScale == null)
+                {
+                    Debugger.LogWarning("::: WARNING ::: The widget on object " + widget.gameObject +
+                        " is trying to execute an event of type " + wEvent.widgetEventType.ToString() + ", but it's target Transform component " +
+                        "is null, did you forget to assign the value in the inspector?");
+                    yield break;
+                }
+
                 // Calculate enlargement scale and convert it to to a vector 3
                 Vector3 enlargeScale = new Vector3(wEvent.OriginalScale.x * wEvent.percentageSizeIncrease,
                     wEvent.OriginalScale.y * wEvent.percentageSizeIncrease,
@@ -138,7 +239,15 @@ namespace BlackneyStudios.GuiWidget
             }
             else if (wEvent.widgetEventType == WidgetEvent.Move)
             {
-                if(wEvent.movementType == MovementType.ReturnToOriginalPosition)
+                if (wEvent.transformToMove == null)
+                {
+                    Debugger.LogWarning("::: WARNING ::: The widget on object " + widget.gameObject +
+                        " is trying to execute an event of type " + wEvent.widgetEventType.ToString() + ", but it's target Transform component " +
+                        "is null, did you forget to assign the value in the inspector?");
+                    yield break;
+                }
+
+                if (wEvent.movementType == MovementType.ReturnToOriginalPosition)
                 {
                     wEvent.transformToMove.DOLocalMove(wEvent.OriginalPosition, wEvent.transistionSpeed);
                 }
@@ -182,17 +291,39 @@ namespace BlackneyStudios.GuiWidget
             else if (wEvent.widgetEventType == WidgetEvent.Wiggle &&
                 wEvent.wiggleType == WiggleType.RotateOnTheSpot)
             {
+                if (wEvent.transformToWiggle == null)
+                {
+                    Debugger.LogWarning("::: WARNING ::: The widget on object " + widget.gameObject +
+                        " is trying to execute an event of type " + wEvent.widgetEventType.ToString() + ", but it's target Transform component " +
+                        "is null, did you forget to assign the value in the inspector?");
+                    yield break;
+                }
+
                 WiggleOnTheSpot(wEvent);
             }
 
             else if (wEvent.widgetEventType == WidgetEvent.Wiggle &&
                wEvent.wiggleType == WiggleType.SideToSide)
             {
+                if (wEvent.transformToWiggle == null)
+                {
+                    Debugger.LogWarning("::: WARNING ::: The widget on object " + widget.gameObject +
+                        " is trying to execute an event of type " + wEvent.widgetEventType.ToString() + ", but it's target Transform component " +
+                        "is null, did you forget to assign the value in the inspector?");
+                    yield break;
+                }
                 WiggleSideToSide(wEvent);
             }
             else if (wEvent.widgetEventType == WidgetEvent.Wiggle &&
               wEvent.wiggleType == WiggleType.UpAndDown)
             {
+                if (wEvent.transformToWiggle == null)
+                {
+                    Debugger.LogWarning("::: WARNING ::: The widget on object " + widget.gameObject +
+                        " is trying to execute an event of type " + wEvent.widgetEventType.ToString() + ", but it's target Transform component " +
+                        "is null, did you forget to assign the value in the inspector?");
+                    yield break;
+                }
                 WiggleUpAndDown(wEvent);
             }
         }
@@ -202,6 +333,7 @@ namespace BlackneyStudios.GuiWidget
         #region
         private void KillAllAnimationsOnWidget(Widget widget)
         {
+            Debugger.Log("WidgetController.KillAllAnimationsOnWidget() called on game object: " + widget.gameObject.name);
             for (int i = 0; i < widget.OnClickEvents.Length; i++)
             {
                 // Kill transform scaling anims
@@ -302,6 +434,12 @@ namespace BlackneyStudios.GuiWidget
             s.SetLoops(wiggleCount);
         }
         #endregion
+    }
+
+    public enum InputDevice
+    {
+        Mouse = 0,
+        TouchScreen = 1,
     }
 
 }

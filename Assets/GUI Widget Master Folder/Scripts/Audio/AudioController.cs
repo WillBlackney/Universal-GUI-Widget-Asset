@@ -58,7 +58,7 @@ namespace BlackneyStudios.GuiWidget
             {
                 if (ap.source.isPlaying == false)
                 {
-                    Debug.LogWarning("GetNextAvailableAudioPlayer() found an available player, returning it");
+                    Debugger.Log("GetNextAvailableAudioPlayer() found an available player, returning it");
                     availablePlayer = ap;
                     break;
                 }
@@ -67,7 +67,7 @@ namespace BlackneyStudios.GuiWidget
             // If there arent any available, create new one, add it to pool, then use it
             if (availablePlayer == null)
             {
-                Debug.LogWarning("GetNextAvailableAudioPlayer() couldn't find an available player, creating a new one");
+                Debugger.LogWarning("GetNextAvailableAudioPlayer() couldn't find an available player, creating a new one");
                 availablePlayer = CreateAndAddAudioPlayerToPool();
             }
 

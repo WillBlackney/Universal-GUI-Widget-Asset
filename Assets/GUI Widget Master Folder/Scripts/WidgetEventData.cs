@@ -115,8 +115,6 @@ namespace BlackneyStudios.GuiWidget
         [Tooltip("The duration in seconds the given transform will take to scale down to its specified size")]
         public float shrinkSpeed;
 
-
-
         // Wiggle Properties
         private bool originalPositionIsSet = false;
         private Vector3 originalPosition;
