@@ -14,6 +14,8 @@ namespace BlackneyStudios.GuiWidget
         [Header("Core Properties")]
         [Tooltip("Sets the type of input events this Widget should intercept and listen for.")]
         public WidgetInputType inputType;
+        [Tooltip("If true, any animation events playing on this widget will stop when a new input event is triggered.")]
+        public bool killPreviousTweensOnNewSequenceStart = true;
         [PropertySpace(SpaceBefore = 20, SpaceAfter = 0)]
 
         [Header("Event Data")]

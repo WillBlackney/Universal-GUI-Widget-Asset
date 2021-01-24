@@ -259,7 +259,9 @@ namespace BlackneyStudios.GuiWidget
         public bool ShowDelayProperties()
         {
             return widgetEventType == WidgetEvent.EnableGameObject ||
+                widgetEventType == WidgetEvent.DisableGameObject ||
                 widgetEventType == WidgetEvent.FadeInCanvasGroup ||
+                widgetEventType == WidgetEvent.FadeOutCanvasGroup ||
                 widgetEventType == WidgetEvent.FadeInImage;
         }
         public bool ShowEndColour()

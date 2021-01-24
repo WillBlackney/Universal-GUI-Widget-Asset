@@ -94,7 +94,8 @@ namespace BlackneyStudios.GuiWidget
                         "is null, did you forget to assign the value in the inspector?");
                     yield break;
                 }
-                wEvent.canvasGroup.alpha = 0;
+                wEvent.canvasGroup.DOKill();
+                wEvent.canvasGroup.DOFade(0, 0);
                 wEvent.canvasGroup.DOFade(1, wEvent.transistionSpeed);
             }
             else if (wEvent.widgetEventType == WidgetEvent.FadeOutCanvasGroup)
@@ -106,7 +107,8 @@ namespace BlackneyStudios.GuiWidget
                         "is null, did you forget to assign the value in the inspector?");
                     yield break;
                 }
-                wEvent.canvasGroup.alpha = 1;
+                wEvent.canvasGroup.DOKill();
+                wEvent.canvasGroup.DOFade(1, 0);
                 wEvent.canvasGroup.DOFade(0, wEvent.transistionSpeed);
             }
             else if (wEvent.widgetEventType == WidgetEvent.FadeInImage)
@@ -118,6 +120,7 @@ namespace BlackneyStudios.GuiWidget
                         "is null, did you forget to assign the value in the inspector?");
                     yield break;
                 }
+                wEvent.image.DOKill();
                 wEvent.image.DOFade(0, 0);
                 wEvent.image.DOFade(1, wEvent.transistionSpeed);
             }
@@ -130,6 +133,7 @@ namespace BlackneyStudios.GuiWidget
                         "is null, did you forget to assign the value in the inspector?");
                     yield break;
                 }
+                wEvent.image.DOKill();
                 wEvent.image.DOFade(1, 0);
                 wEvent.image.DOFade(0, wEvent.transistionSpeed);
             }
@@ -143,6 +147,7 @@ namespace BlackneyStudios.GuiWidget
                         "is null, did you forget to assign the value in the inspector?");
                     yield break;
                 }
+                wEvent.image.DOKill();
                 wEvent.image.DOColor(wEvent.endColour, wEvent.transistionSpeed);
             }
 
@@ -155,6 +160,7 @@ namespace BlackneyStudios.GuiWidget
                         "is null, did you forget to assign the value in the inspector?");
                     yield break;
                 }
+                wEvent.text.DOKill();
                 wEvent.text.DOColor(wEvent.endColour, wEvent.transistionSpeed);
             }
 
@@ -174,6 +180,7 @@ namespace BlackneyStudios.GuiWidget
                     wEvent.OriginalScale.z * wEvent.percentageSizeIncrease);
 
                 // Scale the transform to its new size
+                wEvent.transformToScale.DOKill();
                 wEvent.transformToScale.DOScale(endScale, wEvent.enlargeSpeed);
             }
             else if (wEvent.widgetEventType == WidgetEvent.Shrink)
@@ -192,6 +199,7 @@ namespace BlackneyStudios.GuiWidget
                     wEvent.OriginalScale.z * wEvent.percentageSizeDecrease);
 
                 // Scale the transform to its new size
+                wEvent.transformToScale.DOKill();
                 wEvent.transformToScale.DOScale(endScale, wEvent.shrinkSpeed);
             }
 
@@ -334,30 +342,38 @@ namespace BlackneyStudios.GuiWidget
         private void KillAllAnimationsOnWidget(Widget widget)
         {
             Debugger.Log("WidgetController.KillAllAnimationsOnWidget() called on game object: " + widget.gameObject.name);
+
+            if (widget.killPreviousTweensOnNewSequenceStart == false)
+                return;
+
             for (int i = 0; i < widget.OnClickEvents.Length; i++)
             {
                 // Kill transform scaling anims
-                if(widget.OnClickEvents[i].transformToScale != null)
+                if(widget.OnClickEvents[i].transformToScale != null) //&&
+                 //  DOTween.IsTweening(widget.OnClickEvents[i].transformToScale))
                     widget.OnClickEvents[i].transformToScale.DOKill();                
 
                 // Kill wiggle anims
-                if (widget.OnClickEvents[i].transformToWiggle != null)
+                if (widget.OnClickEvents[i].transformToWiggle != null) //&&
+                  // DOTween.IsTweening(widget.OnClickEvents[i].transformToWiggle))
                     widget.OnClickEvents[i].transformToWiggle.DOKill();                
 
                 // Kill image anims
-                if (widget.OnClickEvents[i].image != null)
+                if (widget.OnClickEvents[i].image != null)// &&
+                  // DOTween.IsTweening(widget.OnClickEvents[i].image))
                     widget.OnClickEvents[i].image.DOKill();                
 
                 // Kill cg anims
-                if (widget.OnClickEvents[i].canvasGroup != null)
+                if (widget.OnClickEvents[i].canvasGroup != null) //&& DOTween.IsTweening(widget.OnClickEvents[i].canvasGroup))
                     widget.OnClickEvents[i].canvasGroup.DOKill();                
 
                 // Kill text anims
-                if (widget.OnClickEvents[i].text != null)
+                if (widget.OnClickEvents[i].text != null)                  // && DOTween.IsTweening(widget.OnClickEvents[i].text))
                     widget.OnClickEvents[i].text.DOKill();
 
                 // Kill move anims
                 if (widget.OnClickEvents[i].transformToMove != null)
+                  //  && DOTween.IsTweening(widget.OnClickEvents[i].transformToMove))
                     widget.OnClickEvents[i].transformToMove.DOKill();
 
             }
